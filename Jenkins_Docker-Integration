@@ -1,0 +1,36 @@
+node("master"){
+    
+    def mvnhome=tool name: "mvn3.6.3"
+    def build_number = BUILD_NUMBER
+    
+    stage("Git Checkout")
+    {
+        git branch: 'development', credentialsId: 'f6a70101-716c-425b-b0c8-1daf8efd289a', url: 'https://github.com/gangasoftwaresoluations/maven-web-application.git'
+    }
+    stage("Build")
+    {
+        sh "${mvnhome}/bin/mvn clean package"
+    }
+    stage("Generate Report")
+    {
+        sh "${mvnhome}/bin/mvn sonar:sonar"
+    }
+    stage("Build Docker image")
+    {
+        sh "docker build -t gangadharc/web-app:${build_number} ."
+    }
+    stage("Login & Push image to DockerHub")
+    {
+    withCredentials([string(credentialsId: 'DockerHubpwd', variable: 'DockerHubpwd')]) {
+            sh 'docker login -u gangadharc -p ${DockerHubpwd}'
+        }
+     sh  "docker push gangadharc/web-app:${build_number}"    
+    }
+    stage("Deploy Image")
+    {
+        sshagent(['891b0e34-c3bd-42e6-8420-8115453a6016']) {
+            sh "ssh -o StrictHostKeyChecking=no  ubuntu@13.232.252.145 docker rm -f web-cont || true"
+            sh "ssh -o StrictHostKeyChecking=no  ubuntu@13.232.252.145 docker run -d -p 5555:8080 --name  web-cont  gangadharc/web-app:${build_number}"
+        }
+    }
+}
