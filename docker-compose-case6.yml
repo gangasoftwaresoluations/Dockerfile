@@ -1,0 +1,26 @@
+# Using the existed net and vol and not defined for any containers
+version: '3.1'
+services:
+  spring-boot:
+    image: dockerhandson/spring-boot-mongo
+    container_name: spring-cont
+    ports:
+    - 8888:8080
+    depends_on:
+    - mongo
+    restart: always
+ 
+  mongo:
+    image: mongo
+    container_name: mongo-cont
+    restart: on-failure
+    volumes:
+    - custom-vol:/data/db
+ 
+volumes:
+ custom-vol:
+   external: true
+
+networks:
+  custom-net:
+    external: true 

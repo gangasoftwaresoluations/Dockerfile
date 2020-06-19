@@ -1,0 +1,21 @@
+# creating the network and voume and not defining any contaiers
+version: '3.1'
+services:
+  spring-mongo:
+    image: dockerhandson/spring-boot-mongo
+    container_name: spring-cont
+    ports:
+    - 8888:8080
+    restart: always 
+
+  mongo:
+    image: mongo
+    container_name: mongo-cont
+    restart: on-failure
+ 
+volumes:
+  vol3:
+networks:
+  custom-net3:
+
+ 

@@ -1,0 +1,27 @@
+#Using the exitsted volumes and network and defining with the containers
+version: '3.1'
+services:
+  spring-mongo:
+    image: dockerhandson/spring-boot-mongo
+    container_name: spring-cont
+    ports:
+    - 888:8080
+    restart: always
+    depends_on:
+    - mongo
+    networks:
+    - exited-net
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: on-failure
+    volumes: 
+    - custom-vol:/data/dbt
+    networks:
+    - exited-net
+volumes:
+  custom-vol:
+    external: true
+networks:
+  exited-net:
+    external: true

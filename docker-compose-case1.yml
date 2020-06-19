@@ -1,0 +1,26 @@
+# creating the network and volumes and defining with containers
+version: '3.1'
+services:
+  spring-mongo:
+    image: dockerhandson/spring-boot-mongo
+    container_name: spring-cont
+    restart: always
+    ports:
+    - 8888:8080
+    networks:
+    - my-net
+    depends_on:
+    - mongo
+  mongo:
+    image: mongo
+    container_name: mongo-cont
+    restart: on-failure
+    volumes:
+    - vol1:/data/db
+    networks:
+    - my-net
+
+volumes:
+  vol1:
+networks:
+  my-net:
