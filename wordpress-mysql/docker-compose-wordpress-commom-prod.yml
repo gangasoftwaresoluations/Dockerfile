@@ -1,0 +1,14 @@
+version: "3.1"
+services:
+  wordpress-mysql:
+    environment:
+      WORDPRESS_DB_HOST: sqldb:3306
+      WORDPRESS_DB_USER: ganga
+      WORDPRESS_DB_PASSWORD: ganga
+
+  sqldb:
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: wordpressdb
+      MYSQL_USER: ganga
+      MYSQL_PASSWORD: ganga

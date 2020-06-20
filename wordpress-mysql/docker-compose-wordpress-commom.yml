@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  wordpress-mysql:
+    image: wordpress
+    container_name: wordpress-cont
+    restart: always
+    ports:
+    - 8888:80
+    networks:
+    - wordpress-net
+    depends_on:
+    - sqldb
+
+  sqldb:
+    image: mysql
+    container_name: mysql-cont
+    restart: on-failure
+    networks:
+    - wordpress-net
+    volumes:
+    - sqlbk:/var/lib/mysql
+
+volumes:
+  sqlbk:
+networks:
+  wordpress-net:

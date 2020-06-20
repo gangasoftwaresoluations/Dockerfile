@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  wordpress-mysql:
+    image: wordpress
+    container_name: wordpress-cont
+    restart: always
+    ports:
+    - 8888:80
+    networks:
+    - wordpress-net
+    depends_on:
+    - sqldb
+    environment:
+      WORDPRESS-DB-HOST: sqldb:3306
+      WORDPRESS-DB-USER: ganga
+      WORDPRESS-DB-PASSWD: ganga
+
+
+  sqldb:
+    image: mysql:5.7
+    container_name: mysql-cont
+    restart: on-failure
+    networks:
+    - wordpress-net
+    volumes:
+    - sqlbk:/var/lib/mysql
+    environment: 
+     MYSQL_ROOT_PASSWORD: root
+     MYSQL_DATABASE: wordpresssql
+     MYSQL_USER: ganga
+     MYSQL_PASSWORD: ganga
+ 
+volumes:
+  sqlbk:
+networks:
+  wordpress-net:
